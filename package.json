@@ -1,0 +1,39 @@
+{
+  "name": "tableau-ppt-export",
+  "version": "1.0.0",
+  "description": "Enterprise Tableau to PowerPoint export service with job queue",
+  "main": "server.js",
+  "keywords": [
+    "tableau",
+    "powerpoint",
+    "export",
+    "queue",
+    "enterprise"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "axios-retry": "^4.5.0",
+    "bullmq": "^5.65.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "form-data": "^4.0.5",
+    "ioredis": "^5.8.2",
+    "p-limit": "^7.2.0",
+    "pptxgenjs": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "engines": {
+    "node": "24.11.1"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "worker": "node worker.js",
+    "worker:dev": "nodemon worker.js"
+  }
+}
