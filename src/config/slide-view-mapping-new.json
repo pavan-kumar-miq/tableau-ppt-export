@@ -1,0 +1,795 @@
+{
+  "POLITICAL_SNAPSHOT": {
+    "slides": [
+      {
+        "slideNumber": 1,
+        "background": {
+          "path": "Bg_Slide1.png"
+        },
+        "elements": [
+          {
+            "type": "IMAGE",
+            "path": "MiQ_Logo.png",
+            "rect": {
+              "x": 7.12,
+              "y": 7.85,
+              "w": 7.96,
+              "h": 3.34
+            }
+          },
+          {
+            "type": "SHAPE",
+            "shapeType": "LINE",
+            "rect": {
+              "x": 16.93,
+              "y": 7.13,
+              "w": 0,
+              "h": 4.78
+            },
+            "options": {
+              "line": {
+                "color": "primaryWhite",
+                "width": 1
+              }
+            }
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 19.03,
+              "y": 7.44,
+              "w": 7.82,
+              "h": 4.17
+            },
+            "options": {
+              "fontSize": 18,
+              "align": "CENTER",
+              "color": "primaryWhite",
+              "line": {
+                "color": "primaryPink",
+                "width": "2"
+              }
+            },
+            "content": []
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 19.03,
+              "y": 9.05,
+              "w": 7.82,
+              "h": 1.02
+            },
+            "options": {
+              "fontSize": 18,
+              "align": "CENTER",
+              "color": "primaryWhite"
+            },
+            "content": [
+              {
+                "text": "Client Logo"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 0,
+              "y": 12.93,
+              "w": 33.86,
+              "h": 1.28
+            },
+            "options": {
+              "color": "primaryWhite",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "text": "ADVERTISER NAME : ",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true
+                }
+              },
+              {
+                "valueKey": "advertiserName",
+                "fallback": "MiQ Digital",
+                "options": {
+                  "fontSize": 20,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 0,
+              "y": 14.22,
+              "w": 33.86,
+              "h": 1.28
+            },
+            "options": {
+              "color": "primaryWhite",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "text": "CAMPAIGN LABEL : ",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true
+                }
+              },
+              {
+                "valueKey": "campaignLabel",
+                "fallback": "Test Campaign Entry <--> 9sjwto",
+                "options": {
+                  "fontSize": 20,
+                  "italic": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "slideNumber": 2,
+        "background": {
+          "path": "Bg_Slide2.png"
+        },
+        "elements": [
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 11.68,
+              "y": 8.32,
+              "w": 21.54,
+              "h": 2.06
+            },
+            "options": {
+              "fontSize": 44,
+              "color": "primaryWhite",
+              "align": "CENTER",
+              "bold": true
+            },
+            "content": [
+              {
+                "text": "Performance Display"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "slideNumber": 3,
+        "background": {
+          "path": "Bg_Slide3.png"
+        },
+        "elements": [
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 1,
+              "y": 1,
+              "w": 25.02,
+              "h": 1.03
+            },
+            "options": {
+              "fontSize": 20,
+              "color": "primaryGold",
+              "bold": true
+            },
+            "content": [
+              {
+                "text": "Campaign Performance Overview"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 3.4,
+              "y": 3.67,
+              "w": 8.07,
+              "h": 0.88
+            },
+            "options": {
+              "fontSize": 12,
+              "color": "primaryWhite",
+              "bold": true,
+              "align": "LEFT"
+            },
+            "content": [
+              {
+                "text": "Total Spend"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 12.22,
+              "y": 3.67,
+              "w": 8.07,
+              "h": 0.88
+            },
+            "options": {
+              "fontSize": 12,
+              "color": "primaryWhite",
+              "bold": true,
+              "align": "LEFT"
+            },
+            "content": [
+              {
+                "text": "Total Impressions"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 21,
+              "y": 3.67,
+              "w": 9.99,
+              "h": 0.88
+            },
+            "options": {
+              "fontSize": 12,
+              "color": "primaryWhite",
+              "bold": true
+            },
+            "content": [
+              {
+                "text": "Inventory"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 3.83,
+              "y": 5.02,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "TOTAL_SPEND",
+                "fallback": "0",
+                "format": "currency",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Spend",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 12.57,
+              "y": 5.02,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "TRACKABLE_IMPRESSIONS",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Impressions",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 21.71,
+              "y": 4.46,
+              "w": 8.76,
+              "h": 6.33
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "TOP_CHANNEL",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Top Channel",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": " ",
+                "options": {
+                  "fontSize": 15,
+                  "breakLine": true
+                }
+              },
+              {
+                "valueKey": "TOP_DEVICE",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Top Device",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": " ",
+                "options": {
+                  "fontSize": 15,
+                  "breakLine": true
+                }
+              },
+              {
+                "valueKey": "TOP_APP",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Top App",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 3.83,
+              "y": 9.31,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "REACH",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Reach",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 12.57,
+              "y": 9.31,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "AVG_FREQUENCY",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "Avg Frequency",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 3.83,
+              "y": 13.46,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "VIDEO_PERFORMANCE",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "VCR",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 12.57,
+              "y": 13.46,
+              "w": 6.65,
+              "h": 1.6
+            },
+            "options": {
+              "color": "primaryBlack",
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "valueKey": "CLICK_PERFORMANCE",
+                "options": {
+                  "fontSize": 24,
+                  "bold": true,
+                  "breakLine": true
+                }
+              },
+              {
+                "text": "CTR",
+                "options": {
+                  "fontSize": 9.3,
+                  "italic": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 21,
+              "y": 11.36,
+              "w": 9.99,
+              "h": 4.17
+            },
+            "options": {
+              "fontSize": 18,
+              "align": "CENTER",
+              "color": "primaryWhite",
+              "line": {
+                "color": "primaryPink",
+                "width": "2"
+              }
+            },
+            "content": []
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 21,
+              "y": 12.75,
+              "w": 9.99,
+              "h": 1.02
+            },
+            "options": {
+              "fontSize": 18,
+              "align": "CENTER",
+              "color": "primaryWhite"
+            },
+            "content": [
+              {
+                "text": "Client Logo"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "slideNumber": 4,
+        "background": {
+          "path": "Bg_Table.png"
+        },
+        "elements": [
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 1,
+              "y": 1,
+              "w": 25.02,
+              "h": 1.03
+            },
+            "options": {
+              "fontSize": 20,
+              "color": "primaryGold",
+              "bold": true
+            },
+            "content": [
+              {
+                "text": "Reach & Frequency by Channel"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 0.54,
+              "y": 4.08,
+              "w": 32.64,
+              "h": 1.34
+            },
+            "options": {
+              "fontSize": 14,
+              "color": "primaryWhite",
+              "bold": true,
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "text": "Channel Level Trend"
+              }
+            ]
+          },
+          {
+            "type": "TABLE",
+            "dataKey": "CHANNEL_DATA",
+            "rect": {
+              "x": 0.69,
+              "y": 5.23,
+              "w": 32.48,
+              "h": 4.7
+            },
+            "columnWidths": [
+              13.59,
+              7.21,
+              5.85,
+              5.83
+            ],
+            "tableConfig": {
+              "fill": {
+                "color": "primaryWhite",
+                "transparency": 100
+              },
+              "globalCellOptions": {
+                "fontSize": 12,
+                "color": "primaryWhite",
+                "height": 0.94
+              },
+              "headerOptions": {
+                "bold": true,
+                "align": "CENTER",
+                "valign": "middle"
+              },
+              "dataCellOptions": {
+                "align": "CENTER",
+                "valign": "middle"
+              },
+              "rowHeightConfig": {
+                "headerHeight": 1.4,
+                "dataRowHeight": 0.94
+              },
+              "borderConfig": {
+                "outerBorders": false,
+                "headerSeparator": {
+                  "color": "primaryPink",
+                  "width": 1
+                },
+                "firstColumnSeparator": {
+                  "color": "primaryPink",
+                  "width": 1
+                },
+                "internalBorders": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "slideNumber": 5,
+        "background": {
+          "path": "Bg_Chart.png"
+        },
+        "elements": [
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 1,
+              "y": 1,
+              "w": 25.02,
+              "h": 1.03
+            },
+            "options": {
+              "fontSize": 20,
+              "color": "primaryGold",
+              "bold": true
+            },
+            "content": [
+              {
+                "text": "Reach & Frequency by Channel"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "rect": {
+              "x": 0.54,
+              "y": 4.08,
+              "w": 32.64,
+              "h": 1.34
+            },
+            "options": {
+              "fontSize": 14,
+              "color": "primaryWhite",
+              "bold": true,
+              "align": "CENTER"
+            },
+            "content": [
+              {
+                "text": "Channel Level Trend"
+              }
+            ]
+          },
+          {
+            "type": "CHART",
+            "dataKey": "CHANNEL_DATA",
+            "rect": {
+              "x": 0.69,
+              "y": 5.46,
+              "w": 32.48,
+              "h": 10.55
+            },
+            "chartConfig": {
+              "type": "BAR_LINE",
+              "seriesConfig": {
+                "categoryField": "channel"
+              },
+              "chartOptions": {
+                "showLegend": true,
+                "legendPos": "b",
+                "showValue": true,
+                "showLabel": true,
+                "legendFontSize": 10.5,
+                "legendColor": "primaryWhite"
+              },
+              "barConfig": {
+                "seriesField": "impressions",
+                "seriesName": "Impressions",
+                "chartColors": [
+                  "primaryPink"
+                ],
+                "barGapWidthPct": 312,
+                "showValue": false,
+                "dataLabelPosition": "outEnd",
+                "dataLabelFontSize": 10.5,
+                "dataLabelColor": "primaryWhite"
+              },
+              "lineConfig": {
+                "seriesField": "reach",
+                "seriesName": "Reach",
+                "chartColors": [
+                  "primaryGold"
+                ],
+                "lineSize": 3,
+                "lineSmooth": true,
+                "lineDataSymbol": "none",
+                "showValue": false,
+                "showLabel": false,
+                "secondaryValAxis": true,
+                "secondaryCatAxis": true
+              },
+              "axisConfig": {
+                "valAxes": [
+                  {
+                    "showValAxisTitle": true,
+                    "valAxisTitle": "Impressions",
+                    "valAxisTitleFontSize": 10.5,
+                    "valAxisTitleColor": "primaryWhite",
+                    "valAxisLabelFontSize": 10.5,
+                    "valAxisLabelColor": "primaryWhite",
+                    "valAxisDisplayUnit": "thousands",
+                    "valAxisDisplayUnitLabel": false,
+                    "valAxisLabelFormatCode": "#,##0\"K\"",
+                    "valGridLine": {
+                      "style": "none"
+                    },
+                    "valAxisLineShow": false
+                  },
+                  {
+                    "showValAxisTitle": true,
+                    "valAxisTitle": "Reach",
+                    "valAxisTitleFontSize": 10.5,
+                    "valAxisTitleColor": "primaryWhite",
+                    "valAxisLabelFontSize": 10.5,
+                    "valAxisLabelColor": "primaryWhite",
+                    "valAxisDisplayUnit": "thousands",
+                    "valAxisDisplayUnitLabel": false,
+                    "valAxisLabelFormatCode": "#,##0\"K\"",
+                    "valGridLine": {
+                      "style": "none"
+                    },
+                    "valAxisLineShow": false
+                  }
+                ],
+                "catAxes": [
+                  {
+                    "catAxisTitle": "Channel",
+                    "catAxisLabelFontSize": 10.5,
+                    "catAxisLabelColor": "primaryWhite",
+                    "catAxisLineColor": "primaryWhite"
+                  },
+                  {
+                    "catAxisHidden": true
+                  }
+                ],
+                "catAxisLabelFontSize": 10.5,
+                "catAxisLabelColor": "primaryWhite",
+                "catGridLine": {
+                  "style": "none"
+                },
+                "catAxisLineColor": "primaryWhite"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

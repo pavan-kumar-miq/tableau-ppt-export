@@ -1,0 +1,54 @@
+{
+  "POLITICAL_SNAPSHOT": {
+    "slides": [
+      {
+        "slideNumber": 1,
+        "backgroundImage": "Bg_Slide1.png",
+        "type": "title",
+        "title": "Political Snapshot Report",
+        "views": []
+      },
+      {
+        "slideNumber": 2,
+        "backgroundImage": "Bg_Slide2.png",
+        "type": "section",
+        "title": "Performance Display",
+        "views": []
+      },
+      {
+        "slideNumber": 3,
+        "backgroundImage": "Bg_Slide3.png",
+        "type": "content",
+        "title": "Campaign Performance Overview",
+        "views": [
+          "TRACKABLE_IMPRESSIONS",
+          "TOP_CHANNEL",
+          "TOP_DEVICE",
+          "TOP_APP",
+          "REACH",
+          "AVG_FREQUENCY",
+          "VIDEO_PERFORMANCE",
+          "CLICK_PERFORMANCE"
+        ]
+      },
+      {
+        "slideNumber": 4,
+        "backgroundImage": "Bg_Slide4.png",
+        "type": "content",
+        "title": "Reach & Frequency by Channel Table",
+        "views": [
+          "CHANNEL_DATA"
+        ]
+      },
+      {
+        "slideNumber": 5,
+        "backgroundImage": "Bg_Slide5.png",
+        "type": "content",
+        "title": "Reach & Frequency by Channel Chart",
+        "views": [
+          "CHANNEL_DATA"
+        ]
+      }
+    ]
+  }
+}

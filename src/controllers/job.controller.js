@@ -1,90 +1,91 @@
-const jobService = require('../services/job.service');
-const logger = require('../utils/logger.util');
+const jobService = require("../services/job.service");
+const logger = require("../utils/logger.util");
 
+/**
+ * Validates and queues a new export job.
+ *
+ * @param {object} req - Express request object
+ * @param {object} req.body - Request body
+ * @param {string} req.body.useCase - Use case identifier
+ * @param {string} req.body.email - Recipient email address
+ * @param {object} [req.body.filters] - Optional filters for data export
+ * @param {object} res - Express response object
+ */
 async function addJob(req, res) {
   try {
-    const { viewIds, email, filters, config, siteName } = req.body;
+    const { useCase, email, filters } = req.body;
 
-    if (!viewIds || !Array.isArray(viewIds) || viewIds.length === 0) {
+    if (!useCase) {
       return res.status(400).json({
-        error: 'viewIds is required and must be a non-empty array'
+        error: "useCase is required",
+        validUseCases: ["POLITICAL_SNAPSHOT"],
       });
     }
 
     if (!email) {
       return res.status(400).json({
-        error: 'email is required'
+        error: "email is required",
       });
     }
 
-    const validSites = [
-      'miqdigital-us',
-      'miqdigital-anz',
-      'miqdigital-ca',
-      'miqdigital-emea',
-      'miqdigital-sea',
-      'miqdigital-global',
-      'miqdigital-integration',
-      'miqdigital-internal'
-    ];
-    
-    if (!siteName) {
+    // Validate useCase exists in mapping
+    const usecaseMapping = require("../config/usecase-mapping.json");
+    if (!usecaseMapping[useCase]) {
       return res.status(400).json({
-        error: 'siteName is required',
-        validSites
-      });
-    }
-    
-    if (!validSites.includes(siteName)) {
-      return res.status(400).json({
-        error: `Invalid siteName. Valid sites are: ${validSites.join(', ')}`
+        error: `Invalid useCase: ${useCase}. Valid use cases are: ${Object.keys(
+          usecaseMapping
+        ).join(", ")}`,
       });
     }
 
-    logger.info('Export request received', {
-      viewIds,
+    logger.info("Export request received", {
+      useCase,
       email,
       filterCount: filters ? Object.keys(filters).length : 0,
-      siteName
     });
 
-    const { jobId, status } = await jobService.addJob({
-      viewIds,
+    const jobId = await jobService.addJob({
+      useCase,
       email,
       filters: filters || {},
-      config: config || {},
-      siteName
     });
 
     res.status(202).json({
-      message: 'Export job queued successfully',
+      message: "Export job queued successfully",
       jobId,
-      status
     });
   } catch (error) {
-    logger.error('Failed to queue export job', error);
+    logger.error("Failed to queue export job", error);
     res.status(500).json({
-      error: 'Failed to queue export job',
-      message: error.message
+      error: "Failed to queue export job",
+      message: error.message,
     });
   }
 }
 
+/**
+ * Retrieves job status and details by job ID.
+ *
+ * @param {object} req - Express request object
+ * @param {object} req.params - URL parameters
+ * @param {string} req.params.jobId - Job identifier
+ * @param {object} res - Express response object
+ */
 async function getJobById(req, res) {
   try {
     const { jobId } = req.params;
 
     if (!jobId) {
       return res.status(400).json({
-        error: 'jobId is required'
+        error: "jobId is required",
       });
     }
 
     // Validate that jobId is not a reserved key
-    const reservedKeys = ['queue', 'processing'];
+    const reservedKeys = ["queue", "processing"];
     if (reservedKeys.includes(jobId)) {
       return res.status(400).json({
-        error: `Invalid jobId: "${jobId}" is a reserved key. Please use a valid job ID.`
+        error: `Invalid jobId: "${jobId}" is a reserved key. Please use a valid job ID.`,
       });
     }
 
@@ -92,8 +93,8 @@ async function getJobById(req, res) {
 
     if (!job) {
       return res.status(404).json({
-        error: 'Job not found',
-        jobId
+        error: "Job not found",
+        jobId,
       });
     }
 
@@ -108,13 +109,15 @@ async function getJobById(req, res) {
       completedAt: job.completedAt,
       failedAt: job.failedAt,
       error: job.error,
-      result: job.result
+      result: job.result,
     });
   } catch (error) {
-    logger.error('Failed to get job status', error, { jobId: req.params.jobId });
+    logger.error("Failed to get job status", error, {
+      jobId: req.params.jobId,
+    });
     res.status(500).json({
-      error: 'Failed to get job status',
-      message: error.message
+      error: "Failed to get job status",
+      message: error.message,
     });
   }
 }
@@ -125,13 +128,13 @@ async function getQueueStats(req, res) {
 
     res.status(200).json({
       stats,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Failed to get queue stats', error);
+    logger.error("Failed to get queue stats", error);
     res.status(500).json({
-      error: 'Failed to get queue stats',
-      message: error.message
+      error: "Failed to get queue stats",
+      message: error.message,
     });
   }
 }
@@ -141,16 +144,16 @@ async function cleanupStuckJobs(req, res) {
     const result = await jobService.cleanupStuckJobs();
 
     res.status(200).json({
-      message: 'Cleanup completed',
+      message: "Cleanup completed",
       cleaned: result.cleaned,
       requeued: result.requeued,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Failed to cleanup stuck jobs', error);
+    logger.error("Failed to cleanup stuck jobs", error);
     res.status(500).json({
-      error: 'Failed to cleanup stuck jobs',
-      message: error.message
+      error: "Failed to cleanup stuck jobs",
+      message: error.message,
     });
   }
 }
@@ -159,5 +162,5 @@ module.exports = {
   addJob,
   getJobById,
   getQueueStats,
-  cleanupStuckJobs
+  cleanupStuckJobs,
 };

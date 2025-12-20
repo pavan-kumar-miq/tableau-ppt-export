@@ -1,0 +1,308 @@
+{
+  "POLITICAL_SNAPSHOT": {
+    "FILTERS": {
+      "POLITICAL_ADVERTISER_NAME": "vf_Political Advertiser Name",
+      "ADVERTISER_ID_NAME": "vf_Advertiser ID - Advertiser Name",
+      "CHANNEL": "vf_Channel",
+      "CAMPAIGN_ID_NAME": "vf_Lab Campaign ID - Name",
+      "INSERTION_ORDER_ID": "vf_Insertion Order Id"
+    },
+    "VIEWS": {
+      "TRACKABLE_IMPRESSIONS": {
+        "name": "FlagCard-TrackableImpressions",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          }
+        }
+      },
+      "REACH": {
+        "name": "FlagCard-Reach",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "reach": {
+            "columnName": "Reach",
+            "displayName": "Reach",
+            "isNeededForView": true,
+            "format": "number"
+          }
+        }
+      },
+      "AVG_FREQUENCY": {
+        "name": "FlagCard-AvgFrequency",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Avg Frequency",
+            "isNeededForView": true,
+            "format": "decimal"
+          }
+        }
+      },
+      "VIDEO_PERFORMANCE": {
+        "name": "FlagCard-VCRCTR",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "vcr": {
+            "columnName": "VCR",
+            "displayName": "VCR",
+            "isNeededForView": true,
+            "format": "percentage"
+          }
+        }
+      },
+      "CLICK_PERFORMANCE": {
+        "name": "Chart-ProgrammticRFbychannel",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "ctr": {
+            "columnName": "CTR",
+            "displayName": "CTR",
+            "isNeededForView": true,
+            "format": "percentage"
+          }
+        }
+      },
+      "TOP_CHANNEL": {
+        "name": "FlagCard-TopChannel",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "channel": {
+            "columnName": "Channel",
+            "displayName": "Top Channel",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Trackable Impressions",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "TOP_DEVICE": {
+        "name": "FlagCard-Topdevice",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "device": {
+            "columnName": "Device Make",
+            "displayName": "Top Device",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "householdReached": {
+            "columnName": "Household Reached",
+            "displayName": "Household Reached",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "TOP_APP": {
+        "name": "FlagCard-TopApps",
+        "viewType": "FLAG_CARD",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "app": {
+            "columnName": "App Name",
+            "displayName": "Top App",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "householdReached": {
+            "columnName": "Household Reached",
+            "displayName": "Household Reached",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "LAB_CAMPAIGN_DATA": {
+        "name": "Table-ProgrammticRfbyLabCampaigns",
+        "viewType": "TABLE",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "channel": {
+            "columnName": "Name",
+            "displayName": "Lab Campaign Name",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Avg Frequency",
+            "isNeededForView": true,
+            "format": "decimal"
+          },
+          "reach": {
+            "columnName": "Reach",
+            "displayName": "Reach",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions1": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "INSERTION_ORDER_DATA": {
+        "name": "Table-ProgrammaticreachbyDSPinsertionOrder",
+        "viewType": "TABLE",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "insertionOrderName": {
+            "columnName": "Insertion Order Name",
+            "displayName": "DSP Insertion Order Name",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Avg Frequency",
+            "isNeededForView": true,
+            "format": "decimal"
+          },
+          "reach": {
+            "columnName": "Reach",
+            "displayName": "Reach",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions1": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "DSP_CREATIVE_DATA": {
+        "name": "Table-ProgrammticRFbyDSPCrrative",
+        "viewType": "TABLE",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "creativeName": {
+            "columnName": "Creative Name",
+            "displayName": "DSP Creative Name",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Avg Frequency",
+            "isNeededForView": true,
+            "format": "decimal"
+          },
+          "reach": {
+            "columnName": "Reach",
+            "displayName": "Reach",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions1": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "CHANNEL_DATA": {
+        "name": "Table-ProgrammticRFbyChannel",
+        "viewType": "TABLE",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "channel": {
+            "columnName": "Channel",
+            "displayName": "Channel Name",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Frequency",
+            "isNeededForView": true,
+            "format": "decimal"
+          },
+          "reach": {
+            "columnName": "Reach",
+            "displayName": "Reach",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          },
+          "impressions1": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": false,
+            "format": "number"
+          }
+        }
+      },
+      "IMPRESSIONS_DATA": {
+        "name": "Table-ProgrammaticTrackableImpressionsbyDate",
+        "viewType": "TABLE",
+        "filters": ["POLITICAL_ADVERTISER_NAME", "ADVERTISER_ID_NAME", "CHANNEL", "CAMPAIGN_ID_NAME", "INSERTION_ORDER_ID"],
+        "columns": {
+          "date": {
+            "columnName": "Date",
+            "displayName": "Date",
+            "isNeededForView": true,
+            "format": "string"
+          },
+          "dsp": {
+            "columnName": "Dsp",
+            "displayName": "DSP",
+            "isNeededForView": false,
+            "format": "string"
+          },
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
+            "isNeededForView": true,
+            "format": "number"
+          }
+        }
+      }
+    }
+  }
+}

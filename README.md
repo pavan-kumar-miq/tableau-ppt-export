@@ -5,6 +5,7 @@ Enterprise service for exporting Tableau views to PowerPoint presentations with 
 ## Overview
 
 This service provides an asynchronous job queue system that:
+
 - Accepts export requests via REST API
 - Queues jobs in Redis
 - Processes exports in background workers
@@ -64,6 +65,7 @@ TEST_EMAIL=test@example.com
 ## Running the Service
 
 ### Start API Server
+
 ```bash
 npm start
 # or for development
@@ -71,6 +73,7 @@ npm run dev
 ```
 
 ### Start Worker (separate process)
+
 ```bash
 npm run worker
 # or for development
@@ -82,11 +85,13 @@ Both processes must be running for the service to function.
 ## API Endpoints
 
 ### Health Checks
+
 - `GET /health` - Basic health check
 - `GET /health/ready` - Readiness check (includes Redis)
 - `GET /health/live` - Liveness check
 
 ### Job Management
+
 - `POST /api/v1/jobs` - Submit export job
 - `GET /api/v1/jobs/:jobId` - Get job status
 - `GET /api/v1/jobs/queue/stats` - Get queue statistics
@@ -114,11 +119,13 @@ Content-Type: application/json
 ```
 
 **Required Fields:**
+
 - `viewIds`: Array of Tableau view IDs
 - `email`: Recipient email address
 - `siteName`: Tableau site name (valid sites: miqdigital-us, miqdigital-anz, miqdigital-ca, miqdigital-emea, miqdigital-sea, miqdigital-global, miqdigital-integration, miqdigital-internal)
 
 **Response:**
+
 ```json
 {
   "message": "Export job queued successfully",
@@ -134,6 +141,7 @@ GET /api/v1/jobs/:jobId
 ```
 
 **Response:**
+
 ```json
 {
   "jobId": "1234567890-abc123",
@@ -156,6 +164,7 @@ GET /api/v1/jobs/:jobId
 ## Use Cases
 
 Currently supported use cases:
+
 - `POLITICAL_SNAPSHOT`: Exports political snapshot views to PowerPoint
 
 ## Job Status
@@ -181,8 +190,74 @@ Currently supported use cases:
 │   │   ├── tableau.service.js
 │   │   └── notification.service.js
 │   └── utils/           # Utilities
+│       ├── pptx-helpers.util.js          # PptxGenJS helper functions
+│       ├── pptx-helpers.examples.js      # Usage examples
+│       ├── ppt-builder.util.js           # PPT builder
+│       └── logger.util.js                # Logger
+├── docs/
+│   ├── PPTX_HELPERS_GUIDE.md    # Comprehensive helper guide
+│   └── PPTX_QUICK_REFERENCE.md  # Quick reference card
 └── package.json
 ```
+
+## PptxGenJS Helper Utilities
+
+This project includes comprehensive helper utilities for creating PowerPoint presentations with PptxGenJS. These utilities provide:
+
+- **Constants**: Pre-defined values for layouts, colors, fonts, chart types, and more
+- **Helper Functions**: Easy-to-use functions for creating text, charts, tables, images, and backgrounds
+- **Type-Safe API**: Structured options that reduce errors and improve code readability
+
+### Quick Example
+
+```javascript
+const {
+  COLORS,
+  FONT_SIZE,
+  ALIGN,
+  createTitleText,
+  createBarChart,
+  createTableHeaderRow,
+} = require("./utils/pptx-helpers.util");
+
+// Create a title
+const titleProps = createTitleText("Q4 Sales Report", {
+  color: COLORS.NAVY,
+});
+
+// Create a bar chart
+const chartConfig = createBarChart(
+  ["Q1", "Q2", "Q3", "Q4"],
+  [100, 150, 180, 220],
+  {
+    title: "Quarterly Performance",
+    chartColors: [COLORS.BLUE, COLORS.GREEN, COLORS.ORANGE],
+    showValue: true,
+  }
+);
+
+// Create a table header
+const headers = createTableHeaderRow(["Product", "Sales", "Growth"], {
+  fill: { color: COLORS.NAVY },
+  color: COLORS.WHITE,
+});
+```
+
+### Documentation
+
+- **[Complete Guide](docs/PPTX_HELPERS_GUIDE.md)**: Comprehensive documentation with all functions and constants
+- **[Quick Reference](docs/PPTX_QUICK_REFERENCE.md)**: Quick reference card for common patterns
+- **[Examples](src/utils/pptx-helpers.examples.js)**: Working examples for all components
+
+### Features
+
+- ✅ **Constants** for colors, fonts, layouts, chart types, alignments
+- ✅ **Text helpers** - titles, subtitles, bullets, custom text
+- ✅ **Chart helpers** - bar, line, pie charts with full customization
+- ✅ **Table helpers** - headers, cells, auto-paging tables
+- ✅ **Image helpers** - images with sizing, rotation, effects
+- ✅ **Background helpers** - color and image backgrounds
+- ✅ **Style helpers** - borders, shadows, hyperlinks, fills
 
 ## Development
 

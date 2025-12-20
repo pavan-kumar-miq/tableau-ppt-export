@@ -1,7 +1,13 @@
-const axios = require('axios');
-const FormData = require('form-data');
-const logger = require('../utils/logger.util');
+const axios = require("axios");
+const FormData = require("form-data");
+const logger = require("../utils/logger.util");
 
+const REQUEST_TIMEOUT_MS = 30000;
+
+/**
+ * Service for sending email notifications with attachments.
+ * Interfaces with external notification API for email delivery.
+ */
 class NotificationService {
   constructor() {
     this.apiUrl = process.env.NOTIFICATION_API_URL;
@@ -12,59 +18,87 @@ class NotificationService {
 
     this.client = axios.create({
       baseURL: this.apiUrl,
-      timeout: 30000,
+      timeout: REQUEST_TIMEOUT_MS,
       headers: {
-        'api-gateway-token': this.apiGatewayToken
-      }
+        "api-gateway-token": this.apiGatewayToken,
+      },
     });
 
-    logger.info('Notification Service initialized', {
+    logger.info("Notification Service initialized", {
       apiUrl: this.apiUrl,
-      emailFrom: this.emailFrom
+      emailFrom: this.emailFrom,
     });
   }
 
+  /**
+   * Uploads file attachment to notification service and returns bucket ID.
+   *
+   * @param {Buffer} fileContent - File buffer to upload
+   * @param {string} fileName - Name for the uploaded file
+   * @returns {Promise<string>} Notification bucket ID for the uploaded file
+   * @throws {Error} If upload fails or response is invalid
+   */
   async uploadAttachment(fileContent, fileName) {
     try {
-      logger.info('Uploading attachment', {
+      logger.info("Uploading attachment", {
         fileName,
-        fileSize: fileContent.length
+        fileSize: fileContent.length,
       });
 
       const form = new FormData();
-      form.append('FileName', fileContent, { filename: fileName });
+      form.append("FileName", fileContent, { filename: fileName });
 
-      const response = await this.client.post('/attachment/upload', form, {
-        headers: { ...form.getHeaders() }
+      const response = await this.client.post("/attachment/upload", form, {
+        headers: { ...form.getHeaders() },
       });
 
       if (!response.data?.notificationBucketId) {
-        throw new Error('Invalid response from upload API: missing notificationBucketId');
+        throw new Error(
+          "Invalid response from upload API: missing notificationBucketId"
+        );
       }
 
       const bucketId = response.data.notificationBucketId;
-      
-      logger.info('Attachment uploaded successfully', {
+
+      logger.info("Attachment uploaded successfully", {
         fileName,
-        bucketId
+        bucketId,
       });
 
       return bucketId;
     } catch (error) {
-      logger.error('Failed to upload attachment', error, {
+      logger.error("Failed to upload attachment", error, {
         fileName,
-        errorDetails: error.response?.data
+        errorDetails: error.response?.data,
       });
       throw new Error(`Failed to upload attachment: ${error.message}`);
     }
   }
 
-  async sendEmail(recipientEmail, subject, body, fileContent = null, fileName = null) {
+  /**
+   * Sends HTML email with optional file attachment.
+   * Uploads attachment first if provided, then sends email with attachment reference.
+   *
+   * @param {string} recipientEmail - Recipient email address
+   * @param {string} subject - Email subject line
+   * @param {string} body - HTML email body
+   * @param {Buffer} [fileContent=null] - Optional file attachment buffer
+   * @param {string} [fileName=null] - Optional attachment filename
+   * @returns {Promise<{success: boolean, attachmentId: string|null, response: object}>} Send result
+   * @throws {Error} If email send fails
+   */
+  async sendEmail(
+    recipientEmail,
+    subject,
+    body,
+    fileContent = null,
+    fileName = null
+  ) {
     try {
-      logger.info('Preparing to send email', {
+      logger.info("Preparing to send email", {
         recipientEmail,
         subject,
-        hasAttachment: !!fileContent
+        hasAttachment: !!fileContent,
       });
 
       let attachmentId = null;
@@ -76,25 +110,25 @@ class NotificationService {
       const payload = {
         notifications: [
           {
-            type: 'notify',
+            type: "notify",
             notification: {
-              channelType: 'EMAIL',
+              channelType: "EMAIL",
               contact: {
                 from: this.emailFrom,
-                to: [recipientEmail]
+                to: [recipientEmail],
               },
               content: {
                 subject,
                 body,
-                type: 'HTML'
-              }
-            }
-          }
+                type: "HTML",
+              },
+            },
+          },
         ],
         resourceTags: {
           TEAM: this.teamTag,
-          PRODUCT: this.productTag
-        }
+          PRODUCT: this.productTag,
+        },
       };
 
       if (attachmentId) {
@@ -102,32 +136,32 @@ class NotificationService {
           compression: false,
           attachments: [
             {
-              platform: 'SELF',
-              notificationBucketId: attachmentId
-            }
-          ]
+              platform: "SELF",
+              notificationBucketId: attachmentId,
+            },
+          ],
         };
       }
 
-      const response = await this.client.post('/notifications', payload);
+      const response = await this.client.post("/notifications", payload);
 
-      logger.info('Email sent successfully', {
+      logger.info("Email sent successfully", {
         recipientEmail,
         subject,
         attachmentId,
-        responseStatus: response.status
+        responseStatus: response.status,
       });
 
       return {
         success: true,
         attachmentId,
-        response: response.data
+        response: response.data,
       };
     } catch (error) {
-      logger.error('Failed to send email', error, {
+      logger.error("Failed to send email", error, {
         recipientEmail,
         subject,
-        errorDetails: error.response?.data
+        errorDetails: error.response?.data,
       });
       throw new Error(`Failed to send email: ${error.message}`);
     }

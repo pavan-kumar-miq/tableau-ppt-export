@@ -11,7 +11,7 @@ class PptConfigService {
   }
 
   async getPptConfig(requestData) {
-    const { useCase, ...restData } = requestData;
+    const { useCase, viewData, ...restData } = requestData;
 
     if (!useCase) {
       throw new Error('Use case key is required for use-case specific processing');
@@ -25,10 +25,15 @@ class PptConfigService {
 
     logger.info('Routing to use-case specific service', {
       useCase,
-      service: useCaseService.constructor.name
+      service: useCaseService.constructor.name,
+      hasViewData: !!viewData && Object.keys(viewData).length > 0
     });
 
-    return await useCaseService.getPptConfig(requestData);
+    return await useCaseService.getPptConfig({
+      useCase,
+      viewData,
+      ...restData
+    });
   }
 }
 
