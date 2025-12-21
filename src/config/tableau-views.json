@@ -252,11 +252,11 @@
             "isNeededForView": true,
             "format": "string"
           },
-          "frequency": {
-            "columnName": "Avg Frequency",
-            "displayName": "Frequency",
+          "impressions": {
+            "columnName": "Trackable Impressions",
+            "displayName": "Impressions",
             "isNeededForView": true,
-            "format": "decimal"
+            "format": "number"
           },
           "reach": {
             "columnName": "Reach",
@@ -264,11 +264,11 @@
             "isNeededForView": true,
             "format": "number"
           },
-          "impressions": {
-            "columnName": "Trackable Impressions",
-            "displayName": "Impressions",
+          "frequency": {
+            "columnName": "Avg Frequency",
+            "displayName": "Frequency",
             "isNeededForView": true,
-            "format": "number"
+            "format": "decimal"
           },
           "impressions1": {
             "columnName": "Trackable Impressions",

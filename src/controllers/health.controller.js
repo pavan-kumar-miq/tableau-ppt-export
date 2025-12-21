@@ -1,4 +1,4 @@
-const jobService = require("../services/job.service");
+const { getQueueStats } = require("../services/worker.service");
 const logger = require("../utils/logger.util");
 
 /**
@@ -34,7 +34,7 @@ async function healthCheck(req, res) {
  */
 async function readinessCheck(req, res) {
   try {
-    const stats = await jobService.getQueueStats();
+    const stats = await getQueueStats();
 
     res.status(200).json({
       status: "ready",

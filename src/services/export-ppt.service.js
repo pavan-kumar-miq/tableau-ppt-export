@@ -94,6 +94,15 @@ class ExportPptService {
         viewDataMap
       );
 
+      // Validate that at least some data was transformed
+      if (!transformedData || Object.keys(transformedData).length === 0) {
+        throw new Error(
+          `No view data could be transformed. ` +
+          `Fetched ${viewDataMap.size} views from Tableau but all transformations failed. ` +
+          `Check logs for transformation errors.`
+        );
+      }
+
       logger.info("Generating PowerPoint presentation", { useCase });
       const pptConfig = await pptConfigService.getPptConfig({
         useCase,
@@ -152,25 +161,28 @@ class ExportPptService {
    * @param {string} email - Recipient email address
    * @param {string} useCase - Use case identifier for context
    * @param {Error} error - Original error that caused failure
+   * @param {string} jobId - Job identifier for support reference
    */
-  async sendFailureEmail(email, useCase, error) {
+  async sendFailureEmail(email, useCase, error, jobId) {
     try {
-      logger.info("Sending failure notification email", { email, useCase });
+      logger.info("Sending failure notification email", { email, useCase, jobId });
 
       const subject = "Tableau Export Job Failed";
       const body = `
         <p>We regret to inform you that your Tableau export job has failed.</p>
+        <p><strong>Job ID:</strong> ${jobId}</p>
         <p><strong>Use Case:</strong> ${useCase}</p>
         <p><strong>Error:</strong> ${error.message}</p>
-        <p>Please contact support if you need assistance.</p>
+        <p>Please contact support with the Job ID above if you need assistance.</p>
         <p>Thank you.</p>
       `;
 
       await notificationService.sendSimpleEmail(email, subject, body);
-      logger.info("Failure notification email sent", { email });
+      logger.info("Failure notification email sent", { email, jobId });
     } catch (emailError) {
       logger.error("Failed to send failure notification email", emailError, {
         email,
+        jobId,
         originalError: error.message,
       });
     }

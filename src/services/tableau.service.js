@@ -186,7 +186,7 @@ class TableauService {
 
       return { token, siteId };
     } catch (error) {
-      const { patName } = this._getCredentialsForSite(siteName);
+      const { patName } = this._getCredentialsForSite();
       logger.error("Tableau authentication failed", error, {
         patName,
         siteName,

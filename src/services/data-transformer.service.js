@@ -238,6 +238,7 @@ class DataTransformerService {
     }
 
     const headers = Object.entries(columnsConfig)
+      .filter(([fieldKey, cfg]) => cfg && cfg.isNeededForView !== false)
       .map(([fieldKey, cfg]) => ({
         field: fieldKey,
         value: cfg.displayName || cfg.columnName || fieldKey,

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const app = require("./src/app");
 const logger = require("./src/utils/logger.util");
+const { initWorker, close: closeQueue } = require("./src/services/worker.service");
 
 const PORT = process.env.PORT;
 const NODE_ENV = process.env.NODE_ENV;
@@ -12,6 +13,14 @@ const server = app.getApp().listen(PORT, () => {
     environment: NODE_ENV,
     nodeVersion: process.version,
   });
+
+  // Start Worker Logic (Subscriber) - This enables the "Worker as part of REST service" model
+  try {
+    initWorker();
+    logger.info("Background worker started processing jobs...");
+  } catch (err) {
+    logger.error("Failed to start worker", err);
+  }
 });
 
 /**
@@ -27,11 +36,10 @@ const gracefulShutdown = async (signal) => {
     logger.info("HTTP server closed");
 
     try {
-      const jobService = require("./src/services/job.service");
-      await jobService.close();
-      logger.info("Job service closed");
+      await closeQueue();
+      logger.info("Queue and worker closed");
     } catch (error) {
-      logger.error("Error closing job service", error);
+      logger.error("Error closing queue and worker", error);
     }
 
     logger.info("Graceful shutdown completed");

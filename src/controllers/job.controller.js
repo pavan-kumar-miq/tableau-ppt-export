@@ -1,5 +1,22 @@
-const jobService = require("../services/job.service");
+const { exportQueue, getJobById: getQueueJobById, getQueueStats: getQueueStatsFromProvider } = require("../services/worker.service");
 const logger = require("../utils/logger.util");
+
+/**
+ * Maps BullMQ job states to legacy status values for backward compatibility.
+ * @param {string} bullmqState - BullMQ job state (waiting, active, completed, failed, delayed, paused)
+ * @returns {string} Legacy status (pending, processing, completed, failed)
+ */
+function mapBullMQStateToLegacyStatus(bullmqState) {
+  const stateMap = {
+    waiting: "pending",
+    active: "processing",
+    completed: "completed",
+    failed: "failed",
+    delayed: "pending",
+    paused: "pending",
+  };
+  return stateMap[bullmqState] || bullmqState;
+}
 
 /**
  * Validates and queues a new export job.
@@ -44,7 +61,8 @@ async function addJob(req, res) {
       filterCount: filters ? Object.keys(filters).length : 0,
     });
 
-    const jobId = await jobService.addJob({
+    // Add job to BullMQ queue
+    const job = await exportQueue.add("political-snapshot", {
       useCase,
       email,
       filters: filters || {},
@@ -52,7 +70,7 @@ async function addJob(req, res) {
 
     res.status(202).json({
       message: "Export job queued successfully",
-      jobId,
+      jobId: job.id,
     });
   } catch (error) {
     logger.error("Failed to queue export job", error);
@@ -81,15 +99,7 @@ async function getJobById(req, res) {
       });
     }
 
-    // Validate that jobId is not a reserved key
-    const reservedKeys = ["queue", "processing"];
-    if (reservedKeys.includes(jobId)) {
-      return res.status(400).json({
-        error: `Invalid jobId: "${jobId}" is a reserved key. Please use a valid job ID.`,
-      });
-    }
-
-    const job = await jobService.getJobById(jobId);
+    const job = await getQueueJobById(jobId);
 
     if (!job) {
       return res.status(404).json({
@@ -98,18 +108,21 @@ async function getJobById(req, res) {
       });
     }
 
+    // Map BullMQ state to legacy status for backward compatibility
+    const legacyStatus = mapBullMQStateToLegacyStatus(job.status);
+
     res.status(200).json({
       jobId: job.id,
-      status: job.status,
-      attempts: job.attempts,
+      status: legacyStatus,
+      attempts: job.attemptsMade,
       maxAttempts: job.maxAttempts,
       createdAt: job.createdAt,
-      updatedAt: job.updatedAt,
-      startedAt: job.startedAt,
-      completedAt: job.completedAt,
-      failedAt: job.failedAt,
-      error: job.error,
-      result: job.result,
+      updatedAt: job.processedOn || job.createdAt,
+      startedAt: job.processedOn,
+      completedAt: job.finishedOn,
+      failedAt: legacyStatus === "failed" ? job.finishedOn : null,
+      error: job.failedReason,
+      result: job.returnValue,
     });
   } catch (error) {
     logger.error("Failed to get job status", error, {
@@ -124,7 +137,7 @@ async function getJobById(req, res) {
 
 async function getQueueStats(req, res) {
   try {
-    const stats = await jobService.getQueueStats();
+    const stats = await getQueueStatsFromProvider();
 
     res.status(200).json({
       stats,
@@ -141,12 +154,11 @@ async function getQueueStats(req, res) {
 
 async function cleanupStuckJobs(req, res) {
   try {
-    const result = await jobService.cleanupStuckJobs();
-
+    // BullMQ handles stuck jobs automatically, but we can clean failed jobs if needed
+    // This is a placeholder - BullMQ doesn't have a direct equivalent to cleanupStuckJobs
+    // You can implement custom cleanup logic here if needed
     res.status(200).json({
-      message: "Cleanup completed",
-      cleaned: result.cleaned,
-      requeued: result.requeued,
+      message: "Cleanup completed (BullMQ handles stuck jobs automatically)",
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -158,9 +170,78 @@ async function cleanupStuckJobs(req, res) {
   }
 }
 
+/**
+ * Retries a failed job by job ID.
+ * Only jobs in "failed" state can be retried.
+ *
+ * @param {object} req - Express request object
+ * @param {object} req.params - URL parameters
+ * @param {string} req.params.jobId - Job identifier
+ * @param {object} res - Express response object
+ */
+async function retryJob(req, res) {
+  try {
+    const { jobId } = req.params;
+
+    if (!jobId) {
+      return res.status(400).json({
+        error: "jobId is required",
+      });
+    }
+
+    logger.info("Retry job request received", { jobId });
+
+    // Get the job from BullMQ
+    const job = await exportQueue.getJob(jobId);
+
+    if (!job) {
+      return res.status(404).json({
+        error: "Job not found",
+        jobId,
+      });
+    }
+
+    // Check job state
+    const state = await job.getState();
+
+    if (state !== "failed") {
+      return res.status(400).json({
+        error: `Job cannot be retried. Current status: ${state}`,
+        jobId,
+        status: state,
+        message: "Only failed jobs can be retried. Use the job status endpoint to check the current state.",
+      });
+    }
+
+    // Retry the job
+    await job.retry();
+
+    logger.info("Job queued for retry", {
+      jobId: job.id,
+      previousAttempts: job.attemptsMade,
+    });
+
+    res.status(200).json({
+      message: "Job queued for retry successfully",
+      jobId: job.id,
+      previousAttempts: job.attemptsMade,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    logger.error("Failed to retry job", error, {
+      jobId: req.params.jobId,
+    });
+    res.status(500).json({
+      error: "Failed to retry job",
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   addJob,
   getJobById,
   getQueueStats,
   cleanupStuckJobs,
+  retryJob,
 };

@@ -5,11 +5,11 @@
 ```
 POST /api/v1/jobs
   ↓
-Job Controller (validates & queues)
+Job Controller (validates & queues to BullMQ)
   ↓
-Redis Queue
+BullMQ Queue (Redis-backed)
   ↓
-Worker picks up job
+BullMQ Worker (integrated in server process) picks up job
   ↓
 ExportPptService.processExport()
   ├─→ Step A: Config Lookup (usecase-mapping.json)

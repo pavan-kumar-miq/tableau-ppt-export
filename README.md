@@ -15,11 +15,19 @@ This service provides an asynchronous job queue system that:
 
 ## Architecture
 
-- **API Server** (`server.js`): Express.js REST API for job submission and status
-- **Worker** (`worker.js`): Background worker that processes queued jobs
-- **Redis**: Job queue and state management
+- **API Server** (`server.js`): Express.js REST API for job submission and status, with integrated BullMQ worker
+- **BullMQ Queue** (`src/queue/queue.provider.js`): Redis-based job queue using BullMQ for reliable job processing
+- **Worker**: Integrated into the REST service - processes jobs in the same process (horizontal scaling via multiple instances)
+- **Redis**: Job queue and state management (via BullMQ)
 - **Tableau API**: Fetches views/images from Tableau Server
 - **Email Service**: Sends notifications via external API
+
+### Architecture Benefits
+
+- **Simplified Deployment**: Single process handles both API and worker logic
+- **Horizontal Scaling**: Deploy multiple instances behind a load balancer - each instance processes jobs
+- **Reliability**: BullMQ provides automatic retries, job persistence, and stuck job handling
+- **Concurrency Control**: Configurable concurrency per instance via `QUEUE_CONCURRENCY` environment variable
 
 ## Prerequisites
 
@@ -64,7 +72,9 @@ TEST_EMAIL=test@example.com
 
 ## Running the Service
 
-### Start API Server
+### Start Service (API + Worker)
+
+The service now runs both the REST API and worker in a single process:
 
 ```bash
 npm start
@@ -72,15 +82,20 @@ npm start
 npm run dev
 ```
 
-### Start Worker (separate process)
+**Note**: The worker is automatically started when the server starts. No separate worker process is needed.
 
+### Horizontal Scaling
+
+To scale horizontally, simply deploy multiple instances of the service behind a load balancer. Each instance will:
+- Accept API requests
+- Process jobs from the shared Redis queue
+- Automatically distribute workload across instances
+
+Example with Docker/Kubernetes:
 ```bash
-npm run worker
-# or for development
-npm run worker:dev
+# Deploy 3 instances
+kubectl scale deployment tableau-ppt-export --replicas=3
 ```
-
-Both processes must be running for the service to function.
 
 ## API Endpoints
 
@@ -177,15 +192,15 @@ Currently supported use cases:
 ## Project Structure
 
 ```
-├── server.js              # API server entry point
-├── worker.js              # Worker entry point
+├── server.js              # API server entry point (includes worker initialization)
 ├── src/
 │   ├── app.js            # Express app setup
 │   ├── controllers/      # Request handlers
 │   ├── routes/          # API routes
+│   ├── queue/           # BullMQ queue configuration
+│   │   └── queue.provider.js  # Queue and worker setup
 │   ├── services/        # Business logic
 │   │   ├── use-cases/   # Use-case specific services
-│   │   ├── job.service.js
 │   │   ├── export-ppt.service.js
 │   │   ├── tableau.service.js
 │   │   └── notification.service.js
@@ -262,11 +277,8 @@ const headers = createTableHeaderRow(["Product", "Sales", "Growth"], {
 ## Development
 
 ```bash
-# Run server with auto-reload
+# Run server with auto-reload (includes worker)
 npm run dev
-
-# Run worker with auto-reload
-npm run worker:dev
 ```
 
 ## License
