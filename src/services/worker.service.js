@@ -119,7 +119,7 @@ function initWorker() {
       concurrency,
       // Optional: Use worker threads to prevent blocking the main event loop
       // This is useful for CPU-intensive tasks
-      // useWorkerThreads: true,
+      useWorkerThreads: true,
     }
   );
 

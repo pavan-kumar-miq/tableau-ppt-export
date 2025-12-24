@@ -154,10 +154,6 @@ function _addChart(pptx, slide, chartConfig, slideIndex) {
         const chartData = Array.isArray(chartConfig.data) ? chartConfig.data : [];
         const chartOptions = chartConfig.option || {};
         
-        if (chartData[0]?.dataLabels) {
-          chartOptions._customDataLabels = chartData[0].dataLabels;
-        }
-        
         slide.addChart(chartType, chartData, chartOptions);
       } else {
         logger.warn('Unknown chart type', { type: chartConfig.type });

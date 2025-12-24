@@ -172,7 +172,6 @@ class ExportPptService {
         <p>We regret to inform you that your Tableau export job has failed.</p>
         <p><strong>Job ID:</strong> ${jobId}</p>
         <p><strong>Use Case:</strong> ${useCase}</p>
-        <p><strong>Error:</strong> ${error.message}</p>
         <p>Please contact support with the Job ID above if you need assistance.</p>
         <p>Thank you.</p>
       `;

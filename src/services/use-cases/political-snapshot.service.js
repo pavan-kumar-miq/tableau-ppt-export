@@ -18,7 +18,7 @@ const {
 class PoliticalSnapshotService {
 
   // View keys - use these as constants for type safety
-  static VIEW_KEYS = {
+  VIEW_KEYS = {
     TRACKABLE_IMPRESSIONS: "TRACKABLE_IMPRESSIONS",
     REACH: "REACH",
     AVG_FREQUENCY: "AVG_FREQUENCY",
@@ -33,6 +33,8 @@ class PoliticalSnapshotService {
     CHANNEL_DATA: "CHANNEL_DATA",
     IMPRESSIONS_DATA: "IMPRESSIONS_DATA",
   };
+
+  TOTAL_SLIDES = 11;
 
   constructor() {
     logger.info("Political Snapshot Service initialized");
@@ -64,19 +66,17 @@ class PoliticalSnapshotService {
       const dataToUse = this._mergeViewDataWithDefaults(viewData);
       
       logger.info("Using data for PPT generation", { 
-        viewKeys: Object.keys(dataToUse)
+        viewKeys: Object.keys(dataToUse),
+        totalSlides: this.TOTAL_SLIDES
       });
       
       const slides = [];
 
-      for (const slideConfig of slideMapping.slides) {
-        // Process all slides
-        if (slideConfig.slideNumber <= totalSlides) {
-          logger.info("Creating slide", { slideConfig });
-          const slide = await this._createSlide(slideConfig, dataToUse);
-          logger.info("Slide created", { slideNumber: slideConfig.slideNumber });
-          slides.push(slide);
-        }
+      for (let slideNumber = 1; slideNumber <= this.TOTAL_SLIDES; slideNumber++) {
+        logger.info("Creating slide", { slideNumber });
+        const slide = await this._createSlide(slideNumber, dataToUse);
+        logger.info("Slide created", { slideNumber });
+        slides.push(slide);
       }
 
       logger.info("Slides created", { slideCount: slides.length });
@@ -104,23 +104,35 @@ class PoliticalSnapshotService {
     return { ...viewData };
   }
 
-  async _createSlide(slideConfig, viewData) {
-    switch (slideConfig.slideNumber) {
+  async _createSlide(slideNumber, viewData) {
+    switch (slideNumber) {
       case 1:
-        return this._createSlide1(slideConfig);
+        return this._createSlide1();
       case 2:
-        return this._createSlide2(slideConfig);
+        return this._createSlide2();
       case 3:
-        return this._createSlide3(slideConfig, viewData);
+        return this._createSlide3(viewData);
       case 4:
-        return this._createSlide4(slideConfig, viewData);
+        return this._createSlide4(viewData);
       case 5:
-        return this._createSlide5(slideConfig, viewData);
+        return this._createSlide5(viewData);
+      case 6:
+        return this._createSlide6(viewData);
+      case 7:
+        return this._createSlide7(viewData);
+      case 8:
+        return this._createSlide8(viewData);
+      case 9:
+        return this._createSlide9(viewData);
+      case 10:
+        return this._createSlide10(viewData);
+      case 11:
+        return this._createSlide11(viewData);
       default:
-        logger.warn('Unknown slide number', { slideNumber: slideConfig.slideNumber });
+        logger.warn('Unknown slide number', { slideNumber });
         return {};
     }
-  }
+  } 
 
   /**
    * Get view data by key with null safety
@@ -198,7 +210,7 @@ class PoliticalSnapshotService {
     };
   }
 
-  _createSlide1(slideConfig) {
+  _createSlide1() {
     const slide = {
       BACKGROUND: { url: this._getBackgroundImagePath("Bg_Slide1.png") },
       IMAGE: [],
@@ -309,7 +321,7 @@ class PoliticalSnapshotService {
     return slide;
   }
 
-  _createSlide2(slideConfig) {
+  _createSlide2() {
     const slide = {
       BACKGROUND: { url: this._getBackgroundImagePath("Bg_Slide2.png") },
       TEXT: [],
@@ -332,7 +344,7 @@ class PoliticalSnapshotService {
     return slide;
   }
 
-  _createSlide3(slideConfig, viewData) {
+  _createSlide3(viewData) {
     const slide = {
       BACKGROUND: { url: this._getBackgroundImagePath("Bg_Slide3.png") },
       TEXT: [],
@@ -429,7 +441,7 @@ class PoliticalSnapshotService {
     // Flag Cards - Row 1
     const impressionsCard = this._createFlagCardText(
       viewData,
-      PoliticalSnapshotService.VIEW_KEYS.TRACKABLE_IMPRESSIONS,
+      this.VIEW_KEYS.TRACKABLE_IMPRESSIONS,
       "Impressions",
       {
         x: convertCentimetersToInches(12.57),
@@ -441,9 +453,9 @@ class PoliticalSnapshotService {
     if (impressionsCard) slide.TEXT.push(impressionsCard);
 
     // Inventory section (Top Channel, Device, App)
-    const topChannelData = this._getViewData(viewData, PoliticalSnapshotService.VIEW_KEYS.TOP_CHANNEL);
-    const topDeviceData = this._getViewData(viewData, PoliticalSnapshotService.VIEW_KEYS.TOP_DEVICE);
-    const topAppData = this._getViewData(viewData, PoliticalSnapshotService.VIEW_KEYS.TOP_APP);
+    const topChannelData = this._getViewData(viewData, this.VIEW_KEYS.TOP_CHANNEL);
+    const topDeviceData = this._getViewData(viewData, this.VIEW_KEYS.TOP_DEVICE);
+    const topAppData = this._getViewData(viewData, this.VIEW_KEYS.TOP_APP);
 
     const inventoryTextParts = [];
     
@@ -487,7 +499,7 @@ class PoliticalSnapshotService {
     // Flag Cards - Row 2
     const reachCard = this._createFlagCardText(
       viewData,
-      PoliticalSnapshotService.VIEW_KEYS.REACH,
+      this.VIEW_KEYS.REACH,
       "Reach",
       {
         x: convertCentimetersToInches(3.83),
@@ -500,7 +512,7 @@ class PoliticalSnapshotService {
 
     const avgFreqCard = this._createFlagCardText(
       viewData,
-      PoliticalSnapshotService.VIEW_KEYS.AVG_FREQUENCY,
+      this.VIEW_KEYS.AVG_FREQUENCY,
       "Avg Frequency",
       {
         x: convertCentimetersToInches(12.57),
@@ -514,7 +526,7 @@ class PoliticalSnapshotService {
     // Flag Cards - Row 3
     const videoPerfCard = this._createFlagCardText(
       viewData,
-      PoliticalSnapshotService.VIEW_KEYS.VIDEO_PERFORMANCE,
+      this.VIEW_KEYS.VIDEO_PERFORMANCE,
       "VCR",
       {
         x: convertCentimetersToInches(3.83),
@@ -527,7 +539,7 @@ class PoliticalSnapshotService {
 
     const clickPerfCard = this._createFlagCardText(
       viewData,
-      PoliticalSnapshotService.VIEW_KEYS.CLICK_PERFORMANCE,
+      this.VIEW_KEYS.CLICK_PERFORMANCE,
       "CTR",
       {
         x: convertCentimetersToInches(12.57),
@@ -568,16 +580,430 @@ class PoliticalSnapshotService {
     return slide;
   }
 
-  _createSlide4(slideConfig, viewData) {
+  _createSlide4(viewData) {
     const slide = {
-      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Slide4.png") },
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Table.png") },
       TEXT: [],
       TABLE: [],
     };
 
-    const channelData = this._getViewData(viewData, PoliticalSnapshotService.VIEW_KEYS.CHANNEL_DATA);
+    slide.TEXT.push({
+      text: "Reach & Frequency by Lab Campaign",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Lab Campaign Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const labCampaignData = this._getViewData(viewData, this.VIEW_KEYS.LAB_CAMPAIGN_DATA);
+    if (!labCampaignData || !labCampaignData.headers || !labCampaignData.rows) {
+      logger.warn('Lab Campaign data not available for slide 4', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const tableData = {
+      headers: labCampaignData.headers,
+      rows: labCampaignData.rows,
+    };
+
+    const dataSize = labCampaignData.rows.length;
+
+    if(dataSize > 0 && dataSize < 10) {
+      slide.BACKGROUND.url = this._getBackgroundImagePath(`Bg_Table${dataSize}.png`);
+    }
+
+    const tableConfig = this._getStandardTableConfig({ tableData });
+    const table = buildTableFromConfig(tableData, tableConfig);
+    slide.TABLE.push(table);
+
+    return slide;
+  }
+
+  _createSlide5(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Chart.png") },
+      TEXT: [],
+      CHART: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Lab Campaign",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Lab Campaign Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const labCampaignData = this._getViewData(viewData, this.VIEW_KEYS.LAB_CAMPAIGN_DATA);
+    if (!labCampaignData || !labCampaignData.rows || labCampaignData.rows.length === 0) {
+      logger.warn('Lab Campaign data not available for slide 5', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const chartData = {
+      rows: labCampaignData.rows.map((row) => {
+        const getCell = (fieldName) =>
+          row.find((cell) => cell && cell.field === fieldName) || {
+            value: "",
+            format: FORMAT_TYPES.STRING,
+          };
+
+        return {
+          category: getCell("channel"),
+          impressions: getCell("impressions"),
+          reach: getCell("reach"),
+          frequency: getCell("frequency"),
+        };
+      }),
+    };
+
+    const chartConfig = this._getStandardChartConfig({
+      categoryLabel: "Lab Campaign"
+    });
+
+    const chart = buildChartFromConfig(chartData, chartConfig);
+    if (chart) {
+      slide.CHART.push(chart);
+    } else {
+      logger.warn("Chart data is empty, skipping chart creation");
+    }
+
+    return slide;
+  }
+
+  _createSlide6(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Table.png") },
+      TEXT: [],
+      TABLE: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Insertion Order",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Insertion Order Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const insertionOrderData = this._getViewData(viewData, this.VIEW_KEYS.INSERTION_ORDER_DATA);
+    if (!insertionOrderData || !insertionOrderData.headers || !insertionOrderData.rows) {
+      logger.warn('Insertion Order data not available for slide 6', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const tableData = {
+      headers: insertionOrderData.headers,
+      rows: insertionOrderData.rows,
+    };
+
+    const dataSize = insertionOrderData.rows.length;
+
+    if(dataSize > 0 && dataSize < 10) {
+      slide.BACKGROUND.url = this._getBackgroundImagePath(`Bg_Table${dataSize}.png`);
+    }
+
+    const tableConfig = this._getStandardTableConfig({ tableData });
+    const table = buildTableFromConfig(tableData, tableConfig);
+    slide.TABLE.push(table);
+
+    return slide;
+  }
+
+  _createSlide7(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Chart.png") },
+      TEXT: [],
+      CHART: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Insertion Order",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Insertion Order Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const insertionOrderData = this._getViewData(viewData, this.VIEW_KEYS.INSERTION_ORDER_DATA);
+    if (!insertionOrderData || !insertionOrderData.rows || insertionOrderData.rows.length === 0) {
+      logger.warn('Insertion Order data not available for slide 7', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const chartData = {
+      rows: insertionOrderData.rows.map((row) => {
+        const getCell = (fieldName) =>
+          row.find((cell) => cell && cell.field === fieldName) || {
+            value: "",
+            format: FORMAT_TYPES.STRING,
+          };
+
+        return {
+          category: getCell("insertionOrderName"),
+          impressions: getCell("impressions"),
+          reach: getCell("reach"),
+          frequency: getCell("frequency"),
+        };
+      }),
+    };
+
+    const chartConfig = this._getStandardChartConfig({
+      categoryLabel: "Insertion Order"
+    });
+
+    const chart = buildChartFromConfig(chartData, chartConfig);
+    if (chart) {
+      slide.CHART.push(chart);
+    } else {
+      logger.warn("Chart data is empty, skipping chart creation");
+    }
+
+    return slide;
+  }
+
+  _createSlide8(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Table.png") },
+      TEXT: [],
+      TABLE: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Creative",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Creative Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const creativeData = this._getViewData(viewData, this.VIEW_KEYS.DSP_CREATIVE_DATA);
+    if (!creativeData || !creativeData.headers || !creativeData.rows) {
+      logger.warn('Creative data not available for slide 8', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const tableData = {
+      headers: creativeData.headers,
+      rows: creativeData.rows,
+    };
+
+    const dataSize = creativeData.rows.length;
+
+    if(dataSize > 0 && dataSize < 10) {
+      slide.BACKGROUND.url = this._getBackgroundImagePath(`Bg_Table${dataSize}.png`);
+    }
+
+    const tableConfig = this._getStandardTableConfig({ tableData });
+    const table = buildTableFromConfig(tableData, tableConfig);
+    slide.TABLE.push(table);
+
+    return slide;
+  }
+
+  _createSlide9(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Chart.png") },
+      TEXT: [],
+      CHART: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Creative",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Creative Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const creativeData = this._getViewData(viewData, this.VIEW_KEYS.DSP_CREATIVE_DATA);
+    if (!creativeData || !creativeData.rows || creativeData.rows.length === 0) {
+      logger.warn('Creative data not available for slide 9', { viewData: Object.keys(viewData) });
+      return slide;
+    }
+
+    const chartData = {
+      rows: creativeData.rows.map((row) => {
+        const getCell = (fieldName) =>
+          row.find((cell) => cell && cell.field === fieldName) || {
+            value: "",
+            format: FORMAT_TYPES.STRING,
+          };
+
+        return {
+          category: getCell("creativeName"),
+          impressions: getCell("impressions"),
+          reach: getCell("reach"),
+          frequency: getCell("frequency"),
+        };
+      }),
+    };
+
+    const chartConfig = this._getStandardChartConfig({
+      categoryLabel: "Creative"
+    });
+
+    const chart = buildChartFromConfig(chartData, chartConfig);
+    if (chart) {
+      slide.CHART.push(chart);
+    } else {
+      logger.warn("Chart data is empty, skipping chart creation");
+    }
+
+    return slide;
+  }
+
+  _createSlide10(viewData) {
+    const slide = {
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Table.png") },
+      TEXT: [],
+      TABLE: [],
+    };
+
+    slide.TEXT.push({
+      text: "Reach & Frequency by Channel",
+      option: getTextOptions({
+        x: convertCentimetersToInches(1),
+        y: convertCentimetersToInches(1),
+        w: convertCentimetersToInches(25.02),
+        h: convertCentimetersToInches(1.03),
+        fontSize: 20,
+        color: colors.primaryGold,
+        bold: true,
+      }),
+    });
+
+    slide.TEXT.push({
+      text: "Channel Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const channelData = this._getViewData(viewData, this.VIEW_KEYS.CHANNEL_DATA);
     if (!channelData || !channelData.headers || !channelData.rows) {
-      logger.warn('Channel data not available for slide 4', { viewData: Object.keys(viewData) });
+      logger.warn('Channel data not available for slide 10', { viewData: Object.keys(viewData) });
       return slide;
     }
 
@@ -586,57 +1012,22 @@ class PoliticalSnapshotService {
       rows: channelData.rows,
     };
 
-    const tableConfig = {
-      position: {
-        x: convertCentimetersToInches(0.69),
-        y: convertCentimetersToInches(5.23),
-      },
-      size: {
-        w: convertCentimetersToInches(32.48),
-        h: convertCentimetersToInches(4.7),
-      },
-      fill: { color: colors.primaryWhite, transparency: 100 },
-      globalCellOptions: {
-        fontSize: 12,
-        color: colors.primaryWhite,
-        height: convertCentimetersToInches(0.94),
-      },
-      headerOptions: {
-        bold: true,
-        align: CENTER_ALIGN,
-        valign: "middle",
-      },
-      dataCellOptions: {
-        align: CENTER_ALIGN,
-        valign: "middle",
-      },
-      columnOptions: [
-        { width: convertCentimetersToInches(13.59) },
-        { width: convertCentimetersToInches(7.21) },
-        { width: convertCentimetersToInches(5.85) },
-        { width: convertCentimetersToInches(5.83) },
-      ],
-      rowHeightConfig: {
-        headerHeight: convertCentimetersToInches(1.4),
-        dataRowHeight: convertCentimetersToInches(0.94),
-      },
-      borderConfig: {
-        outerBorders: false,
-        headerSeparator: { color: colors.primaryPink, width: 1 },
-        firstColumnSeparator: { color: colors.primaryPink, width: 1 },
-        internalBorders: true,
-      },
-    };
+    const dataSize = channelData.rows.length;
 
+    if(dataSize > 0 && dataSize < 10) {
+      slide.BACKGROUND.url = this._getBackgroundImagePath(`Bg_Table${dataSize}.png`);
+    }
+
+    const tableConfig = this._getStandardTableConfig({ tableData });
     const table = buildTableFromConfig(tableData, tableConfig);
     slide.TABLE.push(table);
 
     return slide;
   }
 
-  _createSlide5(slideConfig, viewData) {
+  _createSlide11(viewData) {
     const slide = {
-      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Slide5.png") },
+      BACKGROUND: { url: this._getBackgroundImagePath("Bg_Chart.png") },
       TEXT: [],
       CHART: [],
     };
@@ -649,14 +1040,28 @@ class PoliticalSnapshotService {
         w: convertCentimetersToInches(25.02),
         h: convertCentimetersToInches(1.03),
         fontSize: 20,
-        color: colors.primaryWhite,
+        color: colors.primaryGold,
         bold: true,
       }),
     });
 
-    const channelData = this._getViewData(viewData, PoliticalSnapshotService.VIEW_KEYS.CHANNEL_DATA);
+    slide.TEXT.push({
+      text: "Channel Level Trend",
+      option: getTextOptions({
+        x: convertCentimetersToInches(0.54),
+        y: convertCentimetersToInches(4.08),
+        w: convertCentimetersToInches(32.64),
+        h: convertCentimetersToInches(1.34),
+        fontSize: 14,
+        color: colors.primaryWhite,
+        bold: true,
+        align: CENTER_ALIGN,
+      }),
+    });
+
+    const channelData = this._getViewData(viewData, this.VIEW_KEYS.CHANNEL_DATA);
     if (!channelData || !channelData.rows || channelData.rows.length === 0) {
-      logger.warn('Channel data not available for slide 5', { viewData: Object.keys(viewData) });
+      logger.warn('Channel data not available for slide 11', { viewData: Object.keys(viewData) });
       return slide;
     }
     
@@ -680,7 +1085,225 @@ class PoliticalSnapshotService {
       }),
     };
 
-    const chartConfig = {
+    const chartConfig = this._getStandardChartConfig({
+      categoryLabel: "Channel"
+    });
+
+    const chart = buildChartFromConfig(chartData, chartConfig);
+    if (chart) {
+      slide.CHART.push(chart);
+    } else {
+      logger.warn("Chart data is empty, skipping chart creation");
+    }
+
+    return slide;
+  }
+
+  /**
+   * Deep merge utility for config objects
+   * @param {object} target - Base config object
+   * @param {object} source - Override config object
+   * @returns {object} Merged config object
+   */
+  _deepMergeConfig(target, source) {
+    const result = { ...target };
+    
+    for (const key in source) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        result[key] = this._deepMergeConfig(target[key] || {}, source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+    
+    return result;
+  }
+
+  /**
+   * Calculate column widths based on data content
+   * Each column width is based on max string length (header + data values)
+   * @param {object} tableData - Table data with headers and rows
+   * @param {number} totalWidth - Total table width in inches
+   * @param {number} fontSize - Font size for width calculation
+   * @returns {Array} Array of column width objects
+   */
+  _calculateColumnWidths(tableData, totalWidth, fontSize = 12) {
+    const { headers = [], rows = [] } = tableData;
+    const numCols = headers.length;
+    
+    if (numCols === 0) {
+      return [];
+    }
+
+    // Character width estimation: approximately 0.1 inches per character at 12pt font
+    // Adjust based on font size (larger font = wider characters)
+    const charWidthRatio = (fontSize / 12) * 0.1;
+    const padding = 0.3; // Padding in inches for cell content
+    const minColWidth = convertCentimetersToInches(4); // Minimum width for any column
+
+    // Calculate required width for each column based on header + max data value
+    const columnMinWidths = [];
+    
+    for (let colIndex = 0; colIndex < numCols; colIndex++) {
+      let maxLength = 0;
+      
+      // Check header
+      const headerValue = headers[colIndex]?.value || headers[colIndex] || "";
+      const headerStr = typeof headerValue === 'string' ? headerValue : String(headerValue);
+      maxLength = Math.max(maxLength, headerStr.length);
+
+      // Check all data rows for this column
+      rows.forEach((row) => {
+        const cell = row[colIndex];
+        const cellValue = cell?.value || cell || "";
+        const cellStr = typeof cellValue === 'string' ? cellValue : String(cellValue);
+        maxLength = Math.max(maxLength, cellStr.length);
+      });
+
+      // Calculate column width based on max length
+      const calculatedWidth = maxLength * charWidthRatio + padding;
+      const columnWidth = Math.max(calculatedWidth, minColWidth);
+      columnMinWidths.push(columnWidth);
+    }
+
+    // Calculate total minimum width required
+    const totalMinWidth = columnMinWidths.reduce((sum, width) => sum + width, 0);
+
+    // If total minimum width exceeds available width, scale proportionally
+    if (totalMinWidth > totalWidth) {
+      const scaleFactor = totalWidth / totalMinWidth;
+      return columnMinWidths.map(width => ({ width: width * scaleFactor }));
+    }
+
+    // If we have extra space, distribute it proportionally
+    const extraWidth = totalWidth - totalMinWidth;
+    if (extraWidth > 0 && numCols > 0) {
+      // Distribute extra width proportionally based on each column's minimum width
+      const totalMin = columnMinWidths.reduce((sum, w) => sum + w, 0);
+      return columnMinWidths.map((minWidth, index) => {
+        const proportion = minWidth / totalMin;
+        const additionalWidth = extraWidth * proportion;
+        return { width: minWidth + additionalWidth };
+      });
+    }
+
+    // Return minimum widths if they fit exactly
+    return columnMinWidths.map(width => ({ width }));
+  }
+
+  /**
+   * Get standard table configuration with optional overrides
+   * @param {object} options - Configuration options
+   * @param {object} options.tableData - Table data for dynamic width calculation (optional)
+   * @param {object} options.overrides - Configuration overrides (e.g., { position: { x: 1 }, columnOptions: [...] })
+   * @returns {object} Table configuration object
+   * 
+   * @example
+   * // With dynamic width calculation
+   * const config = this._getStandardTableConfig({
+   *   tableData: { headers: [...], rows: [...] }
+   * });
+   * 
+   * // Override position and column widths manually
+   * const config = this._getStandardTableConfig({
+   *   overrides: {
+   *     position: { x: convertCentimetersToInches(1), y: convertCentimetersToInches(6) },
+   *     columnOptions: [
+   *       { width: convertCentimetersToInches(10) },
+   *       { width: convertCentimetersToInches(8) }
+   *     ]
+   *   }
+   * });
+   */
+  _getStandardTableConfig(options = {}) {
+    const { tableData = null, overrides = {} } = typeof options === 'object' && !Array.isArray(options) 
+      ? options 
+      : { tableData: null, overrides: options };
+
+    const totalWidth = convertCentimetersToInches(32.48);
+    const fontSize = 12;
+    // Calculate column widths dynamically if tableData is provided
+    let columnOptions;
+    if (tableData && !overrides.columnOptions) {
+      columnOptions = this._calculateColumnWidths(tableData, totalWidth, fontSize);
+    } else {
+      // Use default widths or overrides
+      columnOptions = overrides.columnOptions || [
+        { width: convertCentimetersToInches(13.59) },
+        { width: convertCentimetersToInches(7.21) },
+        { width: convertCentimetersToInches(5.85) },
+        { width: convertCentimetersToInches(5.83) },
+      ];
+    }
+
+    const standardConfig = {
+      position: {
+        x: convertCentimetersToInches(0.69),
+        y: convertCentimetersToInches(5.23),
+      },
+      size: {
+        w: totalWidth,
+        h: convertCentimetersToInches(4.7),
+      },
+      fill: { color: colors.primaryWhite, transparency: 100 },
+      globalCellOptions: {
+        fontSize: fontSize,
+        color: colors.primaryWhite,
+        height: convertCentimetersToInches(0.94),
+      },
+      headerOptions: {
+        bold: true,
+        align: CENTER_ALIGN,
+        valign: "middle",
+      },
+      dataCellOptions: {
+        align: CENTER_ALIGN,
+        valign: "middle",
+      },
+      columnOptions: columnOptions,
+      rowHeightConfig: {
+        headerHeight: convertCentimetersToInches(1.4),
+        dataRowHeight: convertCentimetersToInches(0.94),
+      },
+      borderConfig: {
+        outerBorders: false,
+        headerSeparator: { color: colors.primaryPink, width: 1 },
+        firstColumnSeparator: { color: colors.primaryPink, width: 1 },
+        internalBorders: true,
+      },
+    };
+
+    return Object.keys(overrides).length > 0 
+      ? this._deepMergeConfig(standardConfig, overrides)
+      : standardConfig;
+  }
+
+  /**
+   * Get standard chart configuration with optional overrides
+   * @param {object} options - Configuration options
+   * @param {string} options.categoryField - Category field name (default: "category")
+   * @param {string} options.categoryLabel - Category axis label (default: "Channel")
+   * @param {object} options.overrides - Configuration overrides (e.g., { position: { x: 1 }, size: { w: 10 } })
+   * @returns {object} Chart configuration object
+   * 
+   * @example
+   * // Override position and category label
+   * const config = this._getStandardChartConfig({
+   *   categoryField: "channel",
+   *   categoryLabel: "Lab Campaign",
+   *   overrides: {
+   *     position: { x: convertCentimetersToInches(1), y: convertCentimetersToInches(6) },
+   *     chartOptions: { legendPos: "r" }
+   *   }
+   * });
+   */
+  _getStandardChartConfig(options = {}) {
+    const {
+      categoryLabel = "Channel",
+      overrides = {}
+    } = options;
+
+    const standardConfig = {
       type: "BAR_LINE",
       position: {
         x: convertCentimetersToInches(0.69),
@@ -706,7 +1329,7 @@ class PoliticalSnapshotService {
         seriesName: "Impressions",
         chartColors: [colors.primaryPink],
         barGapWidthPct: 312,
-        showValue: true,
+        showValue: false,
         dataLabelPosition: "outEnd",
         dataLabelFontSize: 10.5,
         dataLabelColor: colors.primaryWhite,
@@ -754,7 +1377,7 @@ class PoliticalSnapshotService {
         ],
         catAxes: [
           {
-            catAxisTitle: "Channel",
+            catAxisTitle: categoryLabel,
             catAxisLabelFontSize: 10.5,
             catAxisLabelColor: colors.primaryWhite,
             catAxisLineColor: colors.primaryWhite,
@@ -770,14 +1393,9 @@ class PoliticalSnapshotService {
       },
     };
 
-    const chart = buildChartFromConfig(chartData, chartConfig);
-    if (chart) {
-      slide.CHART.push(chart);
-    } else {
-      logger.warn("Chart data is empty, skipping chart creation");
-    }
-
-    return slide;
+    return Object.keys(overrides).length > 0 
+      ? this._deepMergeConfig(standardConfig, overrides)
+      : standardConfig;
   }
 
   _getBackgroundImagePath(imagePath) {
